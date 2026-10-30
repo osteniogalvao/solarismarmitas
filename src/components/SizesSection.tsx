@@ -3,9 +3,9 @@ import size500 from "@/assets/size-500ml.webp";
 import size850 from "@/assets/size-850ml.webp";
 
 const sizes = [
-  { label: "400ml", price: "R$ 16,90", desc: "Refeição individual leve", img: size400 },
-  { label: "500ml", price: "R$ 19,90", desc: "Porção completa", highlight: true, img: size500 },
-  { label: "850ml", price: "R$ 26,90", desc: "Porção grande / família", img: size850 },
+  { label: "400ml", price: "R$ 17,90", desc: "Refeição individual leve", img: size400 },
+  { label: "500ml", price: "R$ 20,90", desc: "Porção completa", highlight: true, img: size500 },
+  { label: "850ml", price: "R$ 25,90", desc: "Porção grande / família", img: size850 },
 ];
 
 export default function SizesSection() {

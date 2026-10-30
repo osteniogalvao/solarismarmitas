@@ -8,11 +8,12 @@ import catLowcarb from "@/assets/cat-lowcarb.webp";
 import size400 from "@/assets/size-400ml.webp";
 import size500 from "@/assets/size-500ml.webp";
 import size850 from "@/assets/size-850ml.webp";
+import promoCombo from "@/assets/promo-combo-10marmitas.webp";
 
 const sizes = [
-  { label: "400ml", price: "R$ 16,90", desc: "Refeição individual leve", img: size400 },
-  { label: "500ml", price: "R$ 19,90", desc: "Porção completa", highlight: true, img: size500 },
-  { label: "850ml", price: "R$ 26,90", desc: "Porção grande / família", img: size850 },
+  { label: "400ml", price: "R$ 17,90", desc: "Refeição individual leve", img: size400 },
+  { label: "500ml", price: "R$ 20,90", desc: "Porção completa", highlight: true, img: size500 },
+  { label: "850ml", price: "R$ 25,90", desc: "Porção grande / família", img: size850 },
 ];
 
 const lines = [
@@ -93,10 +94,9 @@ const lines = [
 export default function MixPromoSection() {
   const { data: gallery } = usePromoGallery();
 
-  const mainImage = gallery?.find((img) => img.is_main) ?? gallery?.[0] ?? null;
-  const thumbs = gallery?.filter((img) => img.id !== mainImage?.id).slice(0, 6) ?? [];
-
-  const hasGallery = mainImage !== null && mainImage !== undefined;
+  // arte principal do combo fica no código (preço atualizado); a galeria do banco só fornece as miniaturas
+  const mainImage = { image_url: promoCombo, alt_text: "10 Marmitas por apenas R$169,90" };
+  const thumbs = gallery?.filter((img) => !img.is_main).slice(0, 6) ?? [];
 
   return (
     <section className="py-14 sm:py-20 bg-muted">
@@ -119,39 +119,37 @@ export default function MixPromoSection() {
         </div>
 
         {/* Photo gallery */}
-        {hasGallery && (
-          <div className="max-w-2xl mx-auto mb-10 space-y-2">
-            {/* Main photo */}
-            <div className="rounded-2xl overflow-hidden bg-card border border-border">
-              <img
-                loading="lazy"
-                decoding="async"
-                src={mainImage.image_url}
-                alt={mainImage.alt_text ?? "Combo promocional Solaris"}
-                className="w-full h-auto object-contain"
-              />
-            </div>
-            {/* Thumbnails */}
-            {thumbs.length > 0 && (
-              <div className="grid grid-cols-6 gap-2">
-                {thumbs.map((img) => (
-                  <div
-                    key={img.id}
-                    className="rounded-xl overflow-hidden aspect-square bg-card border border-border"
-                  >
-                    <img
-                      loading="lazy"
-                      decoding="async"
-                      src={img.image_url}
-                      alt={img.alt_text ?? "Amostra do combo"}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
+        <div className="max-w-2xl mx-auto mb-10 space-y-2">
+          {/* Main photo */}
+          <div className="rounded-2xl overflow-hidden bg-card border border-border">
+            <img
+              loading="lazy"
+              decoding="async"
+              src={mainImage.image_url}
+              alt={mainImage.alt_text ?? "Combo promocional Solaris"}
+              className="w-full h-auto object-contain"
+            />
           </div>
-        )}
+          {/* Thumbnails */}
+          {thumbs.length > 0 && (
+            <div className="grid grid-cols-6 gap-2">
+              {thumbs.map((img) => (
+                <div
+                  key={img.id}
+                  className="rounded-xl overflow-hidden aspect-square bg-card border border-border"
+                >
+                  <img
+                    loading="lazy"
+                    decoding="async"
+                    src={img.image_url}
+                    alt={img.alt_text ?? "Amostra do combo"}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
         {/* Line cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-5xl mx-auto mb-10">

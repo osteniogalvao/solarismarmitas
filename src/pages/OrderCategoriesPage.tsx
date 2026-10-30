@@ -189,7 +189,7 @@ function PromoCarousel({
                 </div>
                 <p className="text-muted-foreground text-sm line-clamp-2 flex-1">{promoCat.description}</p>
                 <p className="text-primary font-bold text-sm">
-                  10 unidades a partir de R$ 159,90
+                  10 unidades a partir de R$ 169,90
                 </p>
                 <span className="inline-flex items-center gap-1 text-primary font-semibold text-sm group-hover/promo:gap-2 transition-all">
                   Montar combo <ArrowRight className="h-4 w-4" />
