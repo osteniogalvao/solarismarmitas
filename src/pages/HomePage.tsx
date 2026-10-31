@@ -94,7 +94,7 @@ export default function HomePage() {
                     isOrphan && "col-span-2 justify-self-center w-[calc(50%-0.375rem)] sm:w-[calc(50%-0.75rem)] lg:col-span-1 lg:w-full",
                   )}
                 >
-                  {/* banner da promoção é paisagem (16:9): abaixo de lg aparece inteiro no topo, sobre um fundo desfocado dele mesmo */}
+                  {/* arte da promoção é quadrada: aparece inteira, sobre um fundo desfocado dela mesma */}
                   {isPromo && (
                     <img
                       aria-hidden
@@ -102,7 +102,7 @@ export default function HomePage() {
                       decoding="async"
                       src={imgSrc}
                       alt=""
-                      className="absolute inset-0 w-full h-full object-cover scale-125 blur-xl lg:hidden"
+                      className="absolute inset-0 w-full h-full object-cover scale-125 blur-xl"
                     />
                   )}
                   {/* as 2 primeiras ficam acima da dobra; o resto só carrega ao rolar */}
@@ -113,13 +113,23 @@ export default function HomePage() {
                     alt={cat.name}
                     className={cn(
                       "absolute inset-0 w-full h-full transition-transform duration-500 group-hover:scale-110",
-                      isPromo ? "object-contain object-top lg:object-cover lg:object-center" : "object-cover object-top",
+                      isPromo ? "object-contain object-top" : "object-cover object-top",
                     )}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-foreground/90 via-foreground/40 to-transparent" />
+                  {/* a arte da promoção já traz título e preço: só o "Escolher" sobre um degradê curto para não cobrir o valor */}
+                  <div
+                    className={cn(
+                      "absolute inset-0 bg-gradient-to-t",
+                      isPromo ? "from-foreground/80 via-transparent to-transparent" : "from-foreground/90 via-foreground/40 to-transparent",
+                    )}
+                  />
                   <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-6">
-                    <h3 className="font-display text-lg sm:text-2xl font-bold text-primary-foreground leading-tight">{cat.name}</h3>
-                    <p className="text-primary-foreground/70 text-xs sm:text-sm mt-1 line-clamp-2">{cat.description}</p>
+                    {!isPromo && (
+                      <>
+                        <h3 className="font-display text-lg sm:text-2xl font-bold text-primary-foreground leading-tight">{cat.name}</h3>
+                        <p className="text-primary-foreground/70 text-xs sm:text-sm mt-1 line-clamp-2">{cat.description}</p>
+                      </>
+                    )}
                     <div className="mt-2 sm:mt-3 inline-flex items-center gap-2 text-secondary font-semibold text-xs sm:text-sm group-hover:gap-3 transition-all">
                       Escolher <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                     </div>
