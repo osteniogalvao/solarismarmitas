@@ -20,8 +20,10 @@ export default function TrackingScripts() {
   useEffect(() => {
     if (!config) return;
 
-    // Facebook Pixel
-    if (config.facebook_pixel_id) {
+    // Facebook Pixel (so inicializa se ninguem carregou o fbq antes, para nao
+    // duplicar init/PageView)
+    const w = window as unknown as { fbq?: unknown };
+    if (config.facebook_pixel_id && !w.fbq && !document.getElementById("fb-pixel")) {
       const script = document.createElement("script");
       script.id = "fb-pixel";
       script.innerHTML = `
@@ -109,12 +111,21 @@ export default function TrackingScripts() {
         customDiv.innerHTML = config.custom_head_scripts;
         const scripts = customDiv.querySelectorAll("script");
         scripts.forEach((s) => {
+          // Pixel da Meta / TikTok ja carregado pelos campos proprios: ignora a
+          // copia colada nos scripts personalizados (causava evento duplicado)
+          const code = `${s.src} ${s.innerHTML}`;
+          if (config.facebook_pixel_id && /fbevents\.js|fbq\(\s*['"](init|track)/.test(code)) return;
+          if (config.tiktok_pixel_id && /analytics\.tiktok\.com|ttq\.(load|page)\(/.test(code)) return;
           const newScript = document.createElement("script");
           if (s.src) newScript.src = s.src;
           else newScript.innerHTML = s.innerHTML;
           if (s.async) newScript.async = true;
           document.head.appendChild(newScript);
         });
+        // marca como injetado (antes o id nunca ia pro DOM e o guard nao funcionava)
+        customDiv.style.display = "none";
+        customDiv.innerHTML = "";
+        document.body.appendChild(customDiv);
       }
     }
   }, [config]);

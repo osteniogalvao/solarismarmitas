@@ -28,19 +28,35 @@ export default function ObrigadoPage() {
       return () => clearTimeout(t);
     }
 
-    // Backup dos eventos de conversao (caso o disparo do modal tenha sido bloqueado)
+    // Dispara a conversao uma unica vez por pedido. O React Router guarda o
+    // location.state no historico, entao recarregar/voltar/reabrir a aba
+    // remontava a pagina e reenviava o Purchase para a Meta.
+    const firedKey = `solaris_purchase_fired_${transactionId}`;
+    let alreadyFired = false;
+    try {
+      alreadyFired = localStorage.getItem(firedKey) === "1";
+      if (!alreadyFired) localStorage.setItem(firedKey, "1");
+    } catch { /* storage bloqueado: segue e dispara */ }
+    if (alreadyFired) return;
+
     const w = window as unknown as {
       fbq?: (...args: unknown[]) => void;
       gtag?: (...args: unknown[]) => void;
       ttq?: { track: (event: string, data: Record<string, unknown>) => void };
     };
     try {
-      w.fbq?.("track", "Purchase", {
-        value: total,
-        currency: "BRL",
-        num_items: itemsCount,
-        order_id: transactionId,
-      });
+      // eventID permite a Meta desduplicar o evento (inclusive com CAPI)
+      w.fbq?.(
+        "track",
+        "Purchase",
+        {
+          value: total,
+          currency: "BRL",
+          num_items: itemsCount,
+          order_id: transactionId,
+        },
+        { eventID: `purchase_${transactionId}` }
+      );
     } catch { /* ignore */ }
     try {
       w.gtag?.("event", "purchase", {
@@ -54,6 +70,7 @@ export default function ObrigadoPage() {
         value: total,
         currency: "BRL",
         order_id: transactionId,
+        event_id: `purchase_${transactionId}`,
       });
     } catch { /* ignore */ }
 
