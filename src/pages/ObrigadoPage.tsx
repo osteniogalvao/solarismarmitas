@@ -11,6 +11,7 @@ interface OrderState {
   total?: number;
   itemsCount?: number;
   transactionId?: string;
+  whatsappMessage?: string;
 }
 
 const WHATSAPP_NUMBER = "5551989173813";
@@ -19,7 +20,10 @@ export default function ObrigadoPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const state = (location.state as OrderState) || {};
-  const { customerName, total, itemsCount, transactionId } = state;
+  const { customerName, total, itemsCount, transactionId, whatsappMessage } = state;
+  const whatsappUrl = whatsappMessage
+    ? `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappMessage)}`
+    : `https://wa.me/${WHATSAPP_NUMBER}`;
 
   useEffect(() => {
     // Sem dados de pedido (acesso direto a URL): volta pra home
@@ -102,11 +106,12 @@ export default function ObrigadoPage() {
 
             <div className="space-y-2">
               <h1 className="font-display text-3xl sm:text-4xl font-black text-foreground">
-                Pedido enviado{customerName ? `, ${customerName.split(" ")[0]}` : ""}!
+                Pedido registrado{customerName ? `, ${customerName.split(" ")[0]}` : ""}!
               </h1>
               <p className="text-muted-foreground text-base sm:text-lg">
-                Recebemos seu pedido e em breve entraremos em contato pelo WhatsApp
-                para combinar Dia/Horário de entrega e forma de pagamento.
+                Para o restaurante receber, envie a mensagem do pedido no WhatsApp.
+                Depois entraremos em contato para combinar Dia/Horário de entrega e
+                forma de pagamento.
               </p>
             </div>
 
@@ -128,19 +133,24 @@ export default function ObrigadoPage() {
               </div>
             </div>
 
-            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-900">
-              <p className="font-semibold mb-1">Não recebeu a mensagem no WhatsApp?</p>
+            <div className="bg-amber-50 border border-amber-300 rounded-xl p-4 sm:p-5 text-sm text-amber-900 text-left space-y-2">
+              <p className="font-bold text-base">Fez o pedido pelo computador?</p>
               <p>
-                Sem problemas — abra novamente clicando no botão abaixo. O pedido
-                continua o mesmo.
+                Seu pedido <strong>só chega ao restaurante depois que você envia a
+                mensagem no WhatsApp</strong>. Confira se a conversa abriu e clique em
+                enviar.
+              </p>
+              <p>
+                Se o WhatsApp não abriu ou você fechou sem enviar, clique no botão
+                abaixo: a mensagem do pedido já vai preenchida.
               </p>
               <a
-                href={`https://wa.me/${WHATSAPP_NUMBER}`}
+                href={whatsappUrl}
                 target="_blank"
                 rel="noopener"
-                className="inline-flex items-center gap-2 mt-3 text-amber-900 font-semibold hover:underline"
+                className="flex w-full items-center justify-center gap-2 mt-2 rounded-lg bg-green-600 px-4 py-3 text-base font-semibold text-white hover:bg-green-700 transition-colors"
               >
-                <MessageCircle className="h-4 w-4" /> Abrir conversa no WhatsApp
+                <MessageCircle className="h-5 w-5" /> Enviar pedido pelo WhatsApp
               </a>
             </div>
 

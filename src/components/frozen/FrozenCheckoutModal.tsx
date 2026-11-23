@@ -101,6 +101,8 @@ export default function FrozenCheckoutModal() {
         total: orderTotal,
         itemsCount,
         transactionId,
+        // permite reabrir o WhatsApp com o pedido preenchido na /obrigado
+        whatsappMessage: message,
       },
     });
   };
